@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">ScanPiggy</string>
+    <string name="UsuarioEmail">Usuario, Email o Número de Teléfono </string>
+    <string name="Contrasena">Contraseña</string>
+    <string name="ConfirmarContrasena">Confirmar Contraseña</string>
+</resources>
