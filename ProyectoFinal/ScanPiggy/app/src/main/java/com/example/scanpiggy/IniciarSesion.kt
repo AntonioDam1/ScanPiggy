@@ -1,14 +1,21 @@
 package com.example.scanpiggy
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.widget.Button
 import android.widget.ImageView
+import androidx.navigation.ui.AppBarConfiguration
 import com.bumptech.glide.Glide
+import com.example.scanpiggy.databinding.ActivityMainBinding
 
 class IniciarSesion : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_iniciar_sesion)
+
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
 
         val gifImageView = findViewById<ImageView>(R.id.gifImageView)
         Glide.with(this).load(R.drawable.huchaunscreen).into(gifImageView)
@@ -28,6 +35,11 @@ class IniciarSesion : AppCompatActivity() {
         val imageTwitter = findViewById<ImageView>(R.id.imageTwitter)
         imageTwitter.setOnClickListener {
             val intent = packageManager.getLaunchIntentForPackage("com.twitter.android")
+            startActivity(intent)
+        }
+
+        btnLogin.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
     }

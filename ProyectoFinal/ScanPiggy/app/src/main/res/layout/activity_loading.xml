@@ -4,48 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
     tools:context=".Loading">
 
     <ImageView
+        android:id="@+id/imageViewBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/fondoconnubes" />
+
+    <ImageView
         android:id="@+id/imageView"
-        android:layout_width="355dp"
-        android:layout_height="299dp"
+        android:layout_width="386dp"
+        android:layout_height="353dp"
         android:src="@drawable/huchalogo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.069" />
+        app:layout_constraintVertical_bias="0.152" />
 
     <Button
         android:id="@+id/btnLogin"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="74dp"
-        android:layout_marginEnd="74dp"
+        android:layout_width="265dp"
+        android:layout_height="59dp"
         android:text="Iniciar sesión"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.591"
+        app:layout_constraintVertical_bias="0.612"
         tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/btnRegister"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="74dp"
-        android:layout_marginEnd="70dp"
+        android:layout_width="265dp"
+        android:layout_height="59dp"
         android:text="Registrarse"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.696"
+        app:layout_constraintVertical_bias="0.737"
         tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>

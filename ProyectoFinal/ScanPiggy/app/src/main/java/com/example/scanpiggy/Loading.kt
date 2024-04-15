@@ -12,6 +12,9 @@ class Loading : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loading)
 
+        val gifImageView = findViewById<ImageView>(R.id.imageViewBackground)
+        Glide.with(this).load(R.drawable.fondoconnubes).into(gifImageView)
+
         val btnRegister = findViewById<Button>(R.id.btnRegister)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
 
