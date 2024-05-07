@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+
+
 }
 
 android {
@@ -36,6 +38,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
 }
 
 dependencies {
@@ -49,6 +52,8 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.1")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
 

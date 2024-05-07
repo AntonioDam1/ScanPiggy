@@ -3,4 +3,8 @@
     <string name="UsuarioEmail">Usuario, Email o Número de Teléfono </string>
     <string name="Contrasena">Contraseña</string>
     <string name="ConfirmarContrasena">Confirmar Contraseña</string>
+    <string name="Account">Cuenta</string>
+    <string name="resumen_de_gastos">Resumen de Gastos:</string>
+    <string name="Wallets">Billetera</string>
+    <string name="Billetera">Billetera</string>
 </resources>
