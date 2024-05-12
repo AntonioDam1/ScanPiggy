@@ -54,6 +54,7 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     implementation("androidx.compose.ui:ui-text-google-fonts:1.6.1")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("io.card:android-sdk:5.5.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
 
