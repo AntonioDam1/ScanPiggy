@@ -15,6 +15,9 @@
         android:theme="@style/Theme.ScanPiggy"
         tools:targetApi="31">
         <activity
+            android:name=".Billetera"
+            android:exported="false" />
+        <activity
             android:name=".IniciarSesion"
             android:exported="false" />
         <activity

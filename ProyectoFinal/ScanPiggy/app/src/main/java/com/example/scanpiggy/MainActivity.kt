@@ -1,8 +1,12 @@
 package com.example.scanpiggy
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scanpiggy.CustomAdapter
@@ -13,8 +17,9 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.data.PieData
+import com.google.android.material.navigation.NavigationView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +31,10 @@ class MainActivity : AppCompatActivity() {
 
         setupPieChart()
         setupRecyclerView()
+
+        val navView: NavigationView = findViewById(R.id.nav_view_lateral)
+        navView.setNavigationItemSelectedListener(this)
+
     }
 
     private fun setupPieChart() {
@@ -57,4 +66,30 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = adapter
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_main -> {
+                val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+                drawerLayout.openDrawer(GravityCompat.START)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_billetera -> {
+                val intent = Intent(this, Billetera::class.java)
+                startActivity(intent)
+            }
+            // Otros casos de ítems del menú
+        }
+        // Cerrar el drawer después de manejar el clic del usuario
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
 }
