@@ -1,0 +1,47 @@
+<!-- item_categoria.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/imageCategoria"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="8dp">
+
+        <TextView
+            android:id="@+id/textNombreCategoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre de la categoría"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/textComentario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Comentario"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textCantidad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cantidad"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+</LinearLayout>

@@ -8,4 +8,13 @@
     <color name="colorPrimaryDark">#212538</color>
     <color name="colorAccent">#D81B60</color>
     <color name="color_background">#FAFAFA</color>
+
+    <color name="colorPressed">#2196F3</color>
+    <color name="colorFocused">#2196F3</color>
+    <color name="colorNormal">#FFFFFF</color>
+
+    <color name="colorCategoria1">#FF5733</color>
+    <color name="colorCategoria2">#33FF57</color>
+    <color name="colorCategoria3">#5733FF</color>
+
 </resources>

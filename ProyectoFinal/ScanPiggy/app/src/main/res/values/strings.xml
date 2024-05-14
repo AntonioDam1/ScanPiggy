@@ -5,12 +5,16 @@
     <string name="ConfirmarContrasena">Confirmar Contraseña</string>
     <string name="Account">Cuenta</string>
     <string name="resumen_de_gastos">Resumen de Gastos:</string>
+
+
     <string name="Billetera">Billetera</string>
     <string name="banco_text">Banco</string>
     <string name="vence_text">Vence:</string>
     <string name="num_cuenta">**** **** **** ****</string>
     <string name="btn_text">Escanear Tarjeta</string>
     <string name="fecha">**/**</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

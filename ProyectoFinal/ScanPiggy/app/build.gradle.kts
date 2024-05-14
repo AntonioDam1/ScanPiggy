@@ -56,6 +56,7 @@ dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("io.card:android-sdk:5.5.0")
     implementation("com.google.android.material:material:1.4.0")
+    implementation ("com.google.android.material:material:1.4.0" )
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
 

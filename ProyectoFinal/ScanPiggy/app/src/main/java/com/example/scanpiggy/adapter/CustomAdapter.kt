@@ -1,4 +1,4 @@
-package com.example.scanpiggy
+package com.example.scanpiggy.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.scanpiggy.R
 
 
 class CustomAdapter:RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
@@ -22,10 +23,12 @@ class CustomAdapter:RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
         "Año: XXXX ")
 
 
-    val images = intArrayOf(R.drawable.euro,
+    val images = intArrayOf(
         R.drawable.euro,
         R.drawable.euro,
-        R.drawable.euro)
+        R.drawable.euro,
+        R.drawable.euro
+    )
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
         val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.cards_layout, viewGroup, false)
         return ViewHolder(v)

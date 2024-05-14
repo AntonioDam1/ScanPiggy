@@ -9,14 +9,13 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.scanpiggy.CustomAdapter
-import com.example.scanpiggy.R
+import com.example.scanpiggy.adapter.CustomAdapter
 import com.example.scanpiggy.databinding.ActivityMainBinding
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.data.PieData
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -32,10 +31,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setupPieChart()
         setupRecyclerView()
 
-        val navView: NavigationView = findViewById(R.id.nav_view_lateral)
-        navView.setNavigationItemSelectedListener(this)
+        val bottomNavView: BottomNavigationView = findViewById(R.id.nav_view)
+        bottomNavView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_lista -> {
+                    val intent = Intent(this, Notas::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
+
+        val navViewLateral: NavigationView = findViewById(R.id.nav_view_lateral)
+        navViewLateral.setNavigationItemSelectedListener(this)
 
     }
+
 
     private fun setupPieChart() {
         val pieChart: PieChart = findViewById(R.id.pie_chart)
@@ -83,6 +95,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_billetera -> {
                 val intent = Intent(this, Billetera::class.java)
                 startActivity(intent)
+                return true
             }
             // Otros casos de ítems del menú
         }

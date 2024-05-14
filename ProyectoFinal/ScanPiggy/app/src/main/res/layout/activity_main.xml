@@ -97,13 +97,15 @@
             android:layout_width="409dp"
             android:layout_height="66dp"
             android:background="@color/white"
-            app:itemIconTint="@color/black"
-            app:itemTextColor="@color/selected_color"
+            app:itemHorizontalTranslationEnabled="false"
+            app:itemIconTint="@drawable/button_selector"
+            app:labelVisibilityMode="auto"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/bottom_nav_menu"
-            tools:ignore="MissingConstraints" />
+            app:menu="@menu/bottom_nav_menu" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

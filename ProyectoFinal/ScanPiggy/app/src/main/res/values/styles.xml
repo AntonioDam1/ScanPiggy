@@ -3,4 +3,9 @@
     <style name="TextAppearance.AppCompat.Widget.ActionBar.Title" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" tools:ignore="ResourceCycle">
             <item name="android:fontFamily">monospace</item>
     </style>
+
+    <style name="roundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>
