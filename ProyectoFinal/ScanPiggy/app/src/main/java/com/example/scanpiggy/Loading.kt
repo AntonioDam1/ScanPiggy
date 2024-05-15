@@ -13,16 +13,10 @@ class Loading : AppCompatActivity() {
         setContentView(R.layout.activity_loading)
 
         val gifImageView = findViewById<ImageView>(R.id.imageViewBackground)
-        Glide.with(this).load(R.drawable.fondoconnubes).into(gifImageView)
+        Glide.with(this).load(R.drawable.huchaunscreen).into(gifImageView)
+        val btnWelcome = findViewById<Button>(R.id.btnWelcome)
 
-        val btnRegister = findViewById<Button>(R.id.btnRegister)
-        val btnLogin = findViewById<Button>(R.id.btnLogin)
-
-        btnRegister.setOnClickListener {
-            startActivity(Intent(this, Registrar::class.java))
-        }
-
-        btnLogin.setOnClickListener{
+        btnWelcome.setOnClickListener{
             startActivity(Intent(this, IniciarSesion::class.java))
         }
     }

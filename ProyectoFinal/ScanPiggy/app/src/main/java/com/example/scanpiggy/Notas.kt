@@ -149,40 +149,36 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
 
                 // Establecer el OnClickListener
                 floatingButton.setOnClickListener {
-                    // Aquí colocas el código para navegar a la actividad de categoría de gastos
-                    // Establecer el OnClickListener del FloatingActionButton
-                    floatingButton.setOnClickListener {
-                        val intent = Intent(requireContext(), CategoriaGastoActivity::class.java)
-                        val REQUEST_CODE_ADD_CATEGORY = 1
-                        startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY)
-                    }
-
+                    val intent = Intent(requireContext(), CategoriaGastoActivity::class.java)
+                    val REQUEST_CODE_ADD_CATEGORY = 1
+                    startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY)
 
                     // Después de agregar la categoría, mostrar el RecyclerView y ocultar el texto
                     textoSinCategorias.visibility = View.GONE
-                    recyclerViewGastos.visibility = View.VISIBLE
 
-                    // Configurar el RecyclerView
-                    val recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerViewGastos)
-                    if (recyclerView != null) {
-                        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+                    if (textoSinCategorias.visibility == View.VISIBLE){
+                        recyclerViewGastos.visibility = View.GONE
+                    }
+                    else{
+                        recyclerViewGastos.visibility = View.VISIBLE
                     }
 
-                    // Configurar el adaptador
-                    val adapter = GastosAdapter()
-                    if (recyclerView != null) {
-                        recyclerView.adapter = adapter
-                    }
                 }
 
                 return rootView
             }
 
+            override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+                super.onViewCreated(view, savedInstanceState)
+
+                // Configurar el RecyclerView y el adaptador aquí
+                recyclerViewGastos.layoutManager = LinearLayoutManager(requireContext())
+                val adapter = GastosAdapter()
+                recyclerViewGastos.adapter = adapter
+            }
+
         }
-
-
-
-
     }
 
 

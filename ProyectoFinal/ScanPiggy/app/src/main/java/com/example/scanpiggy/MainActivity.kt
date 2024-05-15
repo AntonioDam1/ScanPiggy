@@ -39,10 +39,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     startActivity(intent)
                     true
                 }
+                R.id.navigation_compras -> {
+                    val intent = Intent(this, Compras::class.java)
+                    startActivity(intent)
+                    true
+                }
+
                 else -> false
             }
         }
-
         val navViewLateral: NavigationView = findViewById(R.id.nav_view_lateral)
         navViewLateral.setNavigationItemSelectedListener(this)
 

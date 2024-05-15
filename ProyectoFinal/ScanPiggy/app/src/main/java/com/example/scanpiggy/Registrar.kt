@@ -1,34 +1,57 @@
 package com.example.scanpiggy
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 
 class Registrar : AppCompatActivity() {
+    private lateinit var auth: FirebaseAuth
+    private lateinit var signupEmail: EditText
+    private lateinit var signupPassword: EditText
+    private lateinit var signupButton: Button
+    private lateinit var loginRedirectText: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registrar)
 
-        val gifImageView = findViewById<ImageView>(R.id.gifImageView)
-        Glide.with(this).load(R.drawable.huchaunscreen).into(gifImageView)
 
-        val imageGmail = findViewById<ImageView>(R.id.imageGmail)
-        imageGmail.setOnClickListener {
-            val intent = packageManager.getLaunchIntentForPackage("com.google.android.gm")
-            startActivity(intent)
+        auth = FirebaseAuth.getInstance()
+        signupEmail = findViewById(R.id.signup_email)
+        signupPassword = findViewById(R.id.signup_password)
+        signupButton = findViewById(R.id.signup_button)
+        loginRedirectText = findViewById(R.id.loginRedirectText)
+
+        signupButton.setOnClickListener {
+            val user = signupEmail.text.toString().trim()
+            val pass = signupPassword.text.toString().trim()
+
+            if (user.isEmpty()) {
+                signupEmail.setError("El correo electrónico no puede estar vacío")
+            }
+            if (pass.isEmpty()) {
+                    signupPassword.setError("La contraseña no puede estar vacía")
+            } else {
+                auth.createUserWithEmailAndPassword(user, pass).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this@Registrar, "Registro exitoso", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this@Registrar, IniciarSesion::class.java))
+                    } else {
+                        Toast.makeText(this@Registrar, "SignUp Failed" + task.exception?.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
 
-        val imageFacebook = findViewById<ImageView>(R.id.imageFacebook)
-        imageFacebook.setOnClickListener {
-            val intent = packageManager.getLaunchIntentForPackage("com.facebook.katana")
-            startActivity(intent)
+        loginRedirectText.setOnClickListener {
+            startActivity(Intent(this@Registrar, IniciarSesion::class.java))
         }
 
-        val imageTwitter = findViewById<ImageView>(R.id.imageTwitter)
-        imageTwitter.setOnClickListener {
-            val intent = packageManager.getLaunchIntentForPackage("com.twitter.android")
-            startActivity(intent)
-        }
     }
 }

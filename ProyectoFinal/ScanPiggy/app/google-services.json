@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "213442277013",
+    "project_id": "scanpiggy",
+    "storage_bucket": "scanpiggy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213442277013:android:c06c6031b008d93726f59c",
+        "android_client_info": {
+          "package_name": "com.example.scanpiggy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUPIk4C-o309kz3LdmTe5QryrLU5p_ra0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

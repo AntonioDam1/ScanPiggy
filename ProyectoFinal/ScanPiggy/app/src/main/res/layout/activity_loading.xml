@@ -4,47 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".Loading">
 
     <ImageView
         android:id="@+id/imageViewBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="358dp"
+        android:layout_height="322dp"
         android:scaleType="fitXY"
-        android:src="@drawable/fondoconnubes" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="386dp"
-        android:layout_height="353dp"
-        android:src="@drawable/huchalogo"
+        android:src="@drawable/huchaunscreen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.152" />
+        app:layout_constraintVertical_bias="0.185" />
 
     <Button
-        android:id="@+id/btnLogin"
+        android:id="@+id/btnWelcome"
         android:layout_width="265dp"
         android:layout_height="59dp"
-        android:text="Iniciar sesión"
+        android:text="Bienvenido/a a ScanPiggy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.612"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/btnRegister"
-        android:layout_width="265dp"
-        android:layout_height="59dp"
-        android:text="Registrarse"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.737"
         tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>
