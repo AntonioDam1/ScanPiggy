@@ -1,5 +1,6 @@
 package com.example.scanpiggy.anadir
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,12 +14,13 @@ class AddBilletera : AppCompatActivity() {
 
     private lateinit var textViewTarjeta: TextView
     private lateinit var textViewFecha: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_billetera)
 
         textViewTarjeta = findViewById(R.id.textViewTarjeta)
-        textViewFecha = findViewById(R.id.textViewFecha)
+        textViewFecha = findViewById(R.id.textViewFechaVencimientoTarjeta)
     }
 
     companion object {
@@ -33,6 +35,17 @@ class AddBilletera : AppCompatActivity() {
         startActivityForResult(intent, SCAN_RESULT)
     }
 
+    fun guardarTarjeta(view: View) {
+        val tarjeta = textViewTarjeta.text.toString()
+        val fecha = textViewFecha.text.toString()
+
+        val intent = Intent()
+        intent.putExtra("tarjeta", tarjeta)
+        intent.putExtra("fecha", fecha)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -41,13 +54,10 @@ class AddBilletera : AppCompatActivity() {
                 val scanResult: CreditCard? = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT)
                 textViewTarjeta.text = scanResult?.redactedCardNumber
 
-                if (scanResult != null) {
-                    if (scanResult.isExpiryValid){
-                        val mes = scanResult?.expiryMonth.toString()
-                        val anyo = scanResult?.expiryYear.toString()
-                        textViewFecha.text = "$mes/$anyo"
-
-                    }
+                if (scanResult != null && scanResult.isExpiryValid){
+                    val mes = scanResult.expiryMonth.toString()
+                    val anyo = scanResult.expiryYear.toString()
+                    textViewFecha.text = "$mes/$anyo"
                 }
             }
         }

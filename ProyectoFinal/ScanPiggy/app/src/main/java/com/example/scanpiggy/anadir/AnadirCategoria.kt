@@ -1,12 +1,16 @@
 package com.example.scanpiggy.anadir
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
+import com.example.scanpiggy.CategoriaGastoActivity
 import com.example.scanpiggy.Gasto
 import com.example.scanpiggy.GastosManager
 import com.example.scanpiggy.Notas
@@ -17,31 +21,64 @@ class AnadirCategoria : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_anadir_categoria)
 
+        val toolbar = findViewById<Toolbar>(R.id.toolbarBack)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        val imagenCategoria = intent.getIntExtra("imagenCategoria", R.drawable.addphotoalternate)
         val nombreCategoria = intent.getStringExtra("nombreCategoria")
-        val imagenCategoria = intent.getIntExtra("imagenCategoria", R.drawable.error) // Puedes proporcionar una imagen predeterminada si no se encuentra la imagen
 
-        // Aquí puedes configurar la imagen y el nombre de la categoría en tus elementos de la interfaz de usuario
-        val imageView = findViewById<ImageView>(R.id.imageCategoria)
-        val textView = findViewById<TextView>(R.id.textNombreCategoria)
-
-        imageView.setImageResource(imagenCategoria)
-        textView.text = nombreCategoria
-
-        // Suponiendo que tienes un botón en tu diseño XML con el id btnAñadirNota
         val btnAnadirCategoria: Button = findViewById(R.id.btnAnadirCategoria)
-
         btnAnadirCategoria.setOnClickListener {
-            val intent = Intent(this, Notas::class.java)
-            startActivity(intent)
+            val cantidadEditText = findViewById<EditText>(R.id.editCantidad)
+            val comentarioEditText = findViewById<EditText>(R.id.editComentario)
+
+            val cantidad = cantidadEditText.text.toString()
+            val comentario = comentarioEditText.text.toString()
+
+            val nuevoGasto = Gasto(imagenCategoria, nombreCategoria ?: "", cantidad, comentario)
+            GastosManager.addGasto(nuevoGasto)
+
+            val resultIntent = Intent()
+            setResult(Activity.RESULT_OK, resultIntent)
+            finish()
         }
 
-        val cantidadEditText = findViewById<EditText>(R.id.editCantidad)
-        val comentarioEditText = findViewById<EditText>(R.id.editComentario)
+        val addPhotoAlternateIcon: ImageView = findViewById(R.id.imageCategoria)
+        addPhotoAlternateIcon.setOnClickListener {
+            val intent = Intent(this, CategoriaGastoActivity::class.java)
+            startActivityForResult(intent, REQUEST_SELECT_CATEGORY)
+        }
 
-        val nuevoGasto = Gasto(imagenCategoria, nombreCategoria.toString(), cantidadEditText, comentarioEditText)
-        GastosManager.addGasto(nuevoGasto)
+    }
+
+    companion object {
+        private const val REQUEST_SELECT_CATEGORY = 1
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_SELECT_CATEGORY) {
+            val imagenCategoria = data?.getIntExtra("imagenCategoria", R.drawable.addphotoalternate)
+            val nombreCategoria = data?.getStringExtra("nombreCategoria")
+
+            // Actualizar la imagen y el nombre en la actividad AnadirCategoria
+            val imageCategoriaView = findViewById<ImageView>(R.id.imageCategoria)
+            val nombreCategoriaView = findViewById<TextView>(R.id.textNombreCategoria)
+
+            imagenCategoria?.let { imageCategoriaView.setImageResource(it) }
+            nombreCategoria?.let { nombreCategoriaView.text = it }
+        }
+    }
 
 
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

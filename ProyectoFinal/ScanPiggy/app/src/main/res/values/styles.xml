@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="TextAppearance.AppCompat.Widget.ActionBar.Title" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" tools:ignore="ResourceCycle">
-            <item name="android:fontFamily">monospace</item>
+            <item name="android:fontFamily">@font/alike</item>
     </style>
 
     <style name="roundedImageView">

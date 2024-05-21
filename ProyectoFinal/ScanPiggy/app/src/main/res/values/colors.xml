@@ -11,6 +11,7 @@
 
     <color name="colorPressed">#2196F3</color>
     <color name="colorFocused">#2196F3</color>
+    <color name="colorApagued">#3075AC</color>
     <color name="colorNormal">#FFFFFF</color>
 
     <color name="colorCategoria1">#FF5733</color>

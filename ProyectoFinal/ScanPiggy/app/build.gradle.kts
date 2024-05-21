@@ -2,8 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
-
-
+    
 }
 
 android {
@@ -43,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -62,6 +62,7 @@ dependencies {
     implementation ("com.github.TutorialsAndroid:GButton:v1.0.19")
     implementation ("com.google.android.gms:play-services-auth:20.4.0")
     implementation("com.google.firebase:firebase-auth:23.0.0")
+
 
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 

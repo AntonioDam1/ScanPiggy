@@ -4,7 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarBack"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/back"
+        app:navigationIconTint="@color/black"
+        app:title="ScanPiggy"
+        app:titleCentered="true"
+        app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        app:titleTextColor="@color/black"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -16,7 +31,7 @@
         app:cardCornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarBack"
         tools:ignore="MissingConstraints">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -77,12 +92,12 @@
                 android:text="@string/vence_text"
                 android:textColor="@android:color/white"
                 android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="@+id/textViewFecha"
-                app:layout_constraintEnd_toStartOf="@+id/textViewFecha"
-                app:layout_constraintTop_toTopOf="@+id/textViewFecha" />
+                app:layout_constraintBottom_toBottomOf="@+id/textViewFechaVencimientoTarjeta"
+                app:layout_constraintEnd_toStartOf="@+id/textViewFechaVencimientoTarjeta"
+                app:layout_constraintTop_toTopOf="@+id/textViewFechaVencimientoTarjeta" />
 
             <TextView
-                android:id="@+id/textViewFecha"
+                android:id="@+id/textViewFechaVencimientoTarjeta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="33dp"
@@ -98,16 +113,36 @@
 
     <Button
         android:id="@+id/buttonEscanear"
-        android:layout_width="218dp"
+        android:layout_width="172dp"
         android:layout_height="45dp"
+        android:layout_marginEnd="8dp"
         android:onClick="scanearTarjeta"
         android:text="Escanear"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView"
-        app:layout_constraintVertical_bias="0.173"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintVertical_bias="0.288" />
+
+    <Button
+        android:id="@+id/buttonGuardar"
+        android:layout_width="172dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:onClick="guardarTarjeta"
+        android:text="Guardar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        app:layout_constraintVertical_bias="0.288" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,20 @@
     android:background="@color/white"
     tools:context=".anadir.AnadirCategoria">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarBack"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/back"
+        app:navigationIconTint="@color/black"
+        app:title="ScanPiggy"
+        app:titleCentered="true"
+        app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        app:titleTextColor="@color/black"/>
+
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageCategoriaOtro"
@@ -18,8 +32,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.079"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarBack"
+        app:layout_constraintVertical_bias="0.05"
         app:shapeAppearanceOverlay="@style/roundedImageView" />
 
     <EditText

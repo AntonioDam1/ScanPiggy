@@ -1,12 +1,17 @@
 package com.example.scanpiggy
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -14,17 +19,24 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.bumptech.glide.Glide
 import com.example.scanpiggy.adapter.DiaViewPagerAdapter
 import com.example.scanpiggy.adapter.GastosAdapter
 import com.example.scanpiggy.adapter.ViewPagerAdapter
+import com.example.scanpiggy.anadir.AnadirCategoria
 import com.example.scanpiggy.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var drawerToggle: ActionBarDrawerToggle
+    private lateinit var auth: FirebaseAuth
+    private var currentUser: FirebaseUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,12 +44,23 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
         setContentView(R.layout.activity_notas)
         setSupportActionBar(binding.toolbar)
 
+        auth = FirebaseAuth.getInstance()
+        currentUser = auth.currentUser
+
+        setupDrawer()
+
 
         val bottomNavView: BottomNavigationView = findViewById(R.id.nav_view)
+        bottomNavView.selectedItemId = R.id.navigation_lista
         bottomNavView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
                     val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.navigation_compras -> {
+                    val intent = Intent(this, Compras::class.java)
                     startActivity(intent)
                     true
                 }
@@ -61,10 +84,44 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
 
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
+        // Mostrar el correo electrónico del usuario en el NavigationView
+        val headerView = navViewLateral.getHeaderView(0)
+        val emailTextView = headerView.findViewById<TextView>(R.id.nav_header_email)
+        emailTextView.text = currentUser?.email
+
+        val profileImageView = headerView.findViewById<ImageView>(R.id.imageViewFotoPerfil)
+        profileImageView.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startForResult.launch(intent)
+        }
+
     }
 
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val uri: Uri? = result.data?.data
+                uri?.let {
+                    val headerView = findViewById<NavigationView>(R.id.nav_view_lateral).getHeaderView(0)
+                    val profileImageView = headerView.findViewById<ImageView>(R.id.imageViewFotoPerfil)
+                    Glide.with(this).load(uri).into(profileImageView)
+                }
+            }
+        }
 
-
+    private fun setupDrawer() {
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout_notas)
+        drawerToggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            binding.toolbar,
+            R.string.drawer_open,
+            R.string.drawer_close
+        )
+        drawerLayout.addDrawerListener(drawerToggle)
+        drawerToggle.syncState()
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -127,43 +184,24 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
 
         class GastosFragment : Fragment() {
 
-            // Declarar la variable para el RecyclerView
             private lateinit var recyclerViewGastos: RecyclerView
             private lateinit var textoSinCategorias: TextView
+            private val gastosAdapter = GastosAdapter()
+            private val REQUEST_CODE_ADD_CATEGORY = 1
 
             override fun onCreateView(
                 inflater: LayoutInflater, container: ViewGroup?,
                 savedInstanceState: Bundle?
             ): View? {
-                // Inflar el diseño del fragmento
                 val rootView = inflater.inflate(R.layout.fragment_gastos, container, false)
 
-                // Acceder al RecyclerView
                 recyclerViewGastos = rootView.findViewById(R.id.recyclerViewGastos)
                 textoSinCategorias = rootView.findViewById(R.id.textoSinCategorias)
-
-                // Configurar el RecyclerView (aquí puedes configurar el LinearLayoutManager, el Adapter, etc.)
-
-                // Acceder al FloatingActionButton
                 val floatingButton: FloatingActionButton = rootView.findViewById(R.id.floatingAnadirGastos)
 
-                // Establecer el OnClickListener
                 floatingButton.setOnClickListener {
-                    val intent = Intent(requireContext(), CategoriaGastoActivity::class.java)
-                    val REQUEST_CODE_ADD_CATEGORY = 1
+                    val intent = Intent(requireContext(), AnadirCategoria::class.java)
                     startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY)
-
-                    // Después de agregar la categoría, mostrar el RecyclerView y ocultar el texto
-                    textoSinCategorias.visibility = View.GONE
-
-
-                    if (textoSinCategorias.visibility == View.VISIBLE){
-                        recyclerViewGastos.visibility = View.GONE
-                    }
-                    else{
-                        recyclerViewGastos.visibility = View.VISIBLE
-                    }
-
                 }
 
                 return rootView
@@ -171,14 +209,32 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
 
             override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                 super.onViewCreated(view, savedInstanceState)
-
-                // Configurar el RecyclerView y el adaptador aquí
                 recyclerViewGastos.layoutManager = LinearLayoutManager(requireContext())
-                val adapter = GastosAdapter()
-                recyclerViewGastos.adapter = adapter
+                recyclerViewGastos.adapter = gastosAdapter
+                updateUI()
             }
 
+            private fun updateUI() {
+                val gastos = GastosManager.getGastos()
+                if (gastos.isEmpty()) {
+                    textoSinCategorias.visibility = View.VISIBLE
+                    recyclerViewGastos.visibility = View.GONE
+                } else {
+                    textoSinCategorias.visibility = View.GONE
+                    recyclerViewGastos.visibility = View.VISIBLE
+                    gastosAdapter.submitList(gastos)
+                }
+            }
+
+            override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+                super.onActivityResult(requestCode, resultCode, data)
+                if (requestCode == REQUEST_CODE_ADD_CATEGORY && resultCode == Activity.RESULT_OK) {
+                    updateUI()
+                }
+            }
         }
+
+
     }
 
 

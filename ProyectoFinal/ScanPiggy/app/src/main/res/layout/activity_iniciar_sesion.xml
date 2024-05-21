@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
         app:cardCornerRadius="30dp"
+        app:cardBackgroundColor="@color/white"
         app:cardElevation="20dp">
 
         <LinearLayout
@@ -28,7 +29,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Login"
+                android:text="@string/iniciar_sesion"
                 android:id="@+id/loginText"
                 android:textSize="36sp"
                 android:textAlignment="center"
@@ -55,7 +56,7 @@
                 android:layout_marginTop="20dp"
                 android:inputType="textPassword"
                 android:padding="8dp"
-                android:hint="Password"
+                android:hint="@string/Contrasena"
                 android:drawableLeft="@drawable/lock"
                 android:textColor="@color/black"
                 android:drawablePadding="8dp"/>
@@ -77,7 +78,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
                 android:padding="8dp"
-                android:text="Forgot Password?"
+                android:text="@string/has_olvidado_tu_contrase_a"
                 android:textColor="@color/lavender"
                 android:textSize="16sp" />
 
@@ -100,7 +101,7 @@
                 android:layout_marginTop="20dp"
                 android:padding="8dp"
                 android:layout_gravity="center"
-                android:text="Not yet registered? Sign Up"
+                android:text="@string/no_est_s_registrado_registrate"
                 android:textAlignment="center"
                 android:textColor="@color/lavender"
                 android:textSize="18sp" />

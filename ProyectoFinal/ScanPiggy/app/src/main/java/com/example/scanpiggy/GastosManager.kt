@@ -1,23 +1,13 @@
 package com.example.scanpiggy
 
 object GastosManager {
-    private val gastosList = mutableListOf<Gasto>()
-    private var listener: GastosUpdateListener? = null
-
-    fun setListener(listener: GastosUpdateListener) {
-        this.listener = listener
-    }
+    private val gastos = mutableListOf<Gasto>()
 
     fun addGasto(gasto: Gasto) {
-        gastosList.add(gasto)
-        listener?.onGastosUpdated()
+        gastos.add(gasto)
     }
 
     fun getGastos(): List<Gasto> {
-        return gastosList
+        return gastos
     }
-}
-
-interface GastosUpdateListener {
-    fun onGastosUpdated()
 }

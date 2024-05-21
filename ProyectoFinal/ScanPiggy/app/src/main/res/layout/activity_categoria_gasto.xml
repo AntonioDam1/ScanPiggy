@@ -8,14 +8,18 @@
     tools:context=".CategoriaGastoActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbarBack"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
-        app:title="@string/app_name"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/back"
+        app:navigationIconTint="@color/black"
+        app:title="ScanPiggy"
         app:titleCentered="true"
-        app:navigationIcon="?android:attr/homeAsUpIndicator"
-        tools:ignore="MissingConstraints" />
+        app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        app:titleTextColor="@color/black"/>
 
     <TextView
         android:id="@+id/textView2"
@@ -28,6 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.226" />
+
 
     <GridView
         android:id="@+id/GridViewGategoriasGastos"

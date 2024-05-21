@@ -1,21 +1,42 @@
 package com.example.scanpiggy
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
+import android.widget.ImageView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.Glide
 import com.example.scanpiggy.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
-class Compras : AppCompatActivity() {
+class Compras : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var drawerToggle: ActionBarDrawerToggle
+    private lateinit var auth: FirebaseAuth
+    private var currentUser: FirebaseUser? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_compras)
         setSupportActionBar(binding.toolbar)
 
+        auth = FirebaseAuth.getInstance()
+        currentUser = auth.currentUser
+
+        setupDrawer()
+
 
         val bottomNavView: BottomNavigationView = findViewById(R.id.nav_view_compras)
+        bottomNavView.selectedItemId = R.id.navigation_compras
         bottomNavView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
@@ -23,9 +44,56 @@ class Compras : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
+                R.id.navigation_lista -> {
+                    val intent = Intent(this, Notas::class.java)
+                    startActivity(intent)
+                    true
+                }
                 else -> false
             }
         }
 
+        val navViewLateral: NavigationView = findViewById(R.id.nav_view_lateral)
+        navViewLateral.setNavigationItemSelectedListener(this)
+
+    }
+
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val uri: Uri? = result.data?.data
+                uri?.let {
+                    val headerView = findViewById<NavigationView>(R.id.nav_view_lateral).getHeaderView(0)
+                    val profileImageView = headerView.findViewById<ImageView>(R.id.imageViewFotoPerfil)
+                    Glide.with(this).load(uri).into(profileImageView)
+                }
+            }
+        }
+
+    private fun setupDrawer() {
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout_compras)
+        drawerToggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            binding.toolbar,
+            R.string.drawer_open,
+            R.string.drawer_close
+        )
+        drawerLayout.addDrawerListener(drawerToggle)
+        drawerToggle.syncState()
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_billetera -> {
+                val intent = Intent(this, Billetera::class.java)
+                startActivity(intent)
+            }
+            // Otros casos de ítems del menú
+        }
+        // Cerrar el drawer después de manejar el clic del usuario
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout_compras)
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
     }
 }

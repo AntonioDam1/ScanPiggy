@@ -16,5 +16,16 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="drawer_open">Abrir menú</string>
+    <string name="drawer_close">Cerrar menú</string>
+
+
+    <string name="registrarse">Registrarse</string>
+    <string name="iniciar_sesion">Iniciar Sesion</string>
+    <string name="has_olvidado_tu_contrase_a">¿Has olvidado tu contraseña?</string>
+    <string name="no_est_s_registrado_registrate">¿No estás registrado? Sign Up</string>
+    <string name="ya_tienes_un_usuario_login">¿Ya tienes un usuario? Login</string>
+    <string name="agrega_una_tarjeta_de_cr_dito">Agrega una tarjeta de crédito</string>
+
 
 </resources>

@@ -3,6 +3,7 @@ package com.example.scanpiggy
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.widget.GridView
@@ -10,7 +11,7 @@ import com.example.scanpiggy.adapter.CategoriasAdapter
 
 class CategoriaGastoActivity : AppCompatActivity() {
     private val imagenesCategorias = intArrayOf(
-        R.drawable.home,
+        R.drawable.house,
         R.drawable.entertainment,
         R.drawable.viajes,
         R.drawable.salud,
@@ -42,13 +43,18 @@ class CategoriaGastoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_categoria_gasto)
 
         // Configurar la Toolbar
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        val toolbar = findViewById<Toolbar>(R.id.toolbarBack)
         setSupportActionBar(toolbar)
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         // Configurar el GridView
         val gridView: GridView = findViewById(R.id.GridViewGategoriasGastos)
         val categoriasAdapter = CategoriasAdapter(this, imagenesCategorias, nombresCategorias,coloresCategorias)
+        // En el adaptador de tu GridView, en el método getView() o similar:
+        gridView.setBackgroundResource(R.drawable.grid_item_border)
+
         gridView.adapter = categoriasAdapter
 
         gridView.setOnItemClickListener { parent, view, position, id ->
@@ -61,6 +67,13 @@ class CategoriaGastoActivity : AppCompatActivity() {
             setResult(Activity.RESULT_OK, intent)
             finish()
         }
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

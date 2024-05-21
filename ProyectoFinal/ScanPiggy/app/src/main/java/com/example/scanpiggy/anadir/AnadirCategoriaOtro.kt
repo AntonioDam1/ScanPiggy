@@ -5,6 +5,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.MenuItem
+import androidx.appcompat.widget.Toolbar
 import com.example.scanpiggy.R
 import com.google.android.material.imageview.ShapeableImageView
 
@@ -16,6 +18,12 @@ class AnadirCategoriaOtro : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_anadir_categoria_otro)
 
+        val toolbar = findViewById<Toolbar>(R.id.toolbarBack)
+        setSupportActionBar(toolbar)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         // Referenciar la imagen en el layout
         imageCategoriaOtro = findViewById(R.id.imageCategoriaOtro)
 
@@ -23,6 +31,14 @@ class AnadirCategoriaOtro : AppCompatActivity() {
         imageCategoriaOtro.setOnClickListener {
             openGallery()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun openGallery() {

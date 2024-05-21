@@ -7,14 +7,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Notas">
 
-    <!-- Contenido principal -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFFFFF"
         tools:context=".MainActivity">
 
-    <!-- AppBarLayout con MaterialToolbar -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -38,9 +36,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-        <!-- Barra de navegación con TabLayout -->
-
-        <!-- Contenedor para ViewPager -->
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
@@ -72,7 +67,8 @@
             android:layout_width="409dp"
             android:layout_height="66dp"
             android:background="@color/white"
-            app:itemIconTint="@color/black"
+            app:itemIconTint="@color/colorFocused"
+            app:itemRippleColor="@color/colorFocused"
             app:itemTextColor="@color/selected_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

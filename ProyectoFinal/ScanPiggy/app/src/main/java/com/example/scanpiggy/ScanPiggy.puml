@@ -1,0 +1,285 @@
+@startuml
+
+class Loading {
+    +onCreate(savedInstanceState: Bundle?): Void
+}
+
+class IniciarSesion {
+    -loginEmail: EditText
+    -loginPassword: EditText
+    -loginButton: Button
+    -signupRedirectText: TextView
+    -forgotPassword: TextView
+    -googleBtn: GoogleSignInButton
+    -gOptions: GoogleSignInOptions
+    -gClient: GoogleSignInClient
+    -auth: FirebaseAuth
+    +onCreate(savedInstanceState: Bundle?): Void
+}
+
+class Registrar {
+    -auth: FirebaseAuth
+    -signupEmail: EditText
+    -signupPassword: EditText
+    -signupButton: Button
+    -loginRedirectText: TextView
+    +onCreate(savedInstanceState: Bundle?): Void
+}
+
+class MainActivity {
+    -binding: ActivityMainBinding
+    +onCreate(savedInstanceState: Bundle?): Void
+    +setupPieChart(): Void
+    +setupRecyclerView(): Void
+    +onOptionsItemSelected(item: MenuItem): Boolean
+    +onNavigationItemSelected(item: MenuItem): Boolean
+}
+
+class CustomAdapter {
+    - arrayPresupuesto: Array<String>
+    - arrayFechas: Array<String>
+    - images: Int[]
+    + onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder
+    + onBindViewHolder(viewHolder: ViewHolder, i: Int): Void
+    + getItemCount(): Int
+}
+
+class ViewHolder {
+    - itemImage: ImageView
+    - itemPresupuesto: TextView
+    - itemFecha: TextView
+    - itemNumeroPresupuesto: EditText
+    + ViewHolder(itemView: View)
+}
+
+class Notas {
+    -binding: ActivityMainBinding
+    +onCreate(savedInstanceState: Bundle?): Void
+    +onOptionsItemSelected(item: MenuItem): Boolean
+    +onNavigationItemSelected(item: MenuItem): Boolean
+}
+
+class DiaFragment {
+    +onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    -setupViewPager(): Void
+    class IngresosFragment
+    class GastosFragment
+}
+
+class SemanaFragment {
+    +onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    -setupViewPager(): Void
+    class IngresosFragmentSemana
+    class GastosFragmentSemana
+}
+
+class MesFragment {
+    +onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    -setupViewPager(): Void
+    class IngresosFragmentMes
+    class GastosFragmentMes
+}
+
+class AnioFragment {
+    +onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    -setupViewPager(): Void
+    class IngresosFragmentAnio
+    class GastosFragmentAnio
+}
+
+class DiaViewPagerAdapter {
+    -fragmentList: MutableList<Fragment>
+    -titleList: MutableList<String>
+    +DiaViewPagerAdapter(manager: FragmentManager)
+    +getItem(position: Int): Fragment
+    +getCount(): Int
+    +addFragment(fragment: Fragment, title: String): Void
+    +getPageTitle(position: Int): CharSequence?
+}
+
+class CategoriaGastoActivity {
+    - imagenesCategorias: Int[]
+    - nombresCategorias: String[]
+    - coloresCategorias: Int[]
+    + onCreate(savedInstanceState: Bundle?): Void
+}
+
+class CategoriasAdapter {
+    - context: Context
+    - imagenes: Int[]
+    - nombres: String[]
+    - colores: Int[]
+    + getCount(): Int
+    + getItem(position: Int): Any
+    + getItemId(position: Int): Long
+    + getView(position: Int, convertView: View?, parent: ViewGroup?): View
+}
+
+class AnadirCategoria {
+    + onCreate(savedInstanceState: Bundle?): void
+}
+
+class AnadirCategoriaOtro {
+    + onCreate(savedInstanceState: Bundle?): void
+    - PICK_IMAGE_REQUEST: int
+    - imageCategoriaOtro: ShapeableImageView
+    + openGallery(): void
+    + onActivityResult(requestCode: int, resultCode: int, data: Intent): void
+}
+
+class Gasto {
+    - imagenCategoria: Int
+    - nombreCategoria: String
+    - cantidad: EditText
+    - comentario: EditText
+}
+
+class GastosAdapter {
+    - gastosList: MutableList<Gasto>
+    + GastosViewHolder
+    + onCreateViewHolder(parent: ViewGroup, viewType: Int): GastosViewHolder
+    + onBindViewHolder(holder: GastosViewHolder, position: Int): Unit
+    + getItemCount(): Int
+    + updateGastosList(newGastosList: List<Gasto>): Unit
+}
+
+class GastosViewHolder {
+    - nombreCategoriaTextView: TextView
+    - imagenCategoriaImageView: ImageView
+    - cantidadTextView: EditText
+    - comentarioTextView: EditText
+}
+
+interface GastosUpdateListener {
+    + onGastosUpdated(): Unit
+}
+
+class GastosManager {
+    - gastosList: MutableList<Gasto>
+    - listener: GastosUpdateListener?
+    + setListener(listener: GastosUpdateListener): Unit
+    + addGasto(gasto: Gasto): Unit
+    + getGastos(): List<Gasto>
+}
+
+class Billetera {
+  onCreate(savedInstanceState: Bundle)
+}
+
+class AddBilletera {
+    - textViewTarjeta: TextView
+    - textViewFecha: TextView
+    - SCAN_RESULT: final int
+    + onCreate(savedInstanceState: Bundle)
+    + scanearTarjeta(view: View)
+    + onActivityResult(requestCode: int, resultCode: int, data: Intent)
+}
+class Toolbar
+class GridView
+class CategoriasAdapter
+class Intent
+class Context
+class Intent
+class LayoutInflater
+class View
+class ViewGroup
+class ImageView
+class TextView
+class AppCompatActivity
+class Intent
+class Bundle
+class Button
+class EditText
+class ImageView
+class TextView
+class Notas
+class R
+class AppCompatActivity
+class Intent
+class Bundle
+class Activity
+class MediaStore
+class R
+class ShapeableImageView
+class TextView
+class ImageView
+class EditText
+class RecyclerView
+class ViewGroup
+class Gasto
+class EditText
+
+Loading --|> AppCompatActivity
+IniciarSesion --|> AppCompatActivity
+Registrar --|> AppCompatActivity
+MainActivity --|> AppCompatActivity
+MainActivity --|> NavigationView.OnNavigationItemSelectedListener
+Notas --|> AppCompatActivity
+Notas --|> NavigationView.OnNavigationItemSelectedListener
+DiaFragment --|> Fragment
+SemanaFragment --|> Fragment
+MesFragment --|> Fragment
+AnioFragment --|> Fragment
+Billetera --|> AppCompatActivity
+AddBilletera --|> AppCompatActivity
+DiaViewPagerAdapter --|> FragmentPagerAdapter
+FragmentPagerAdapter <|-- DiaViewPagerAdapter
+DiaFragment --> IngresosFragment
+DiaFragment --> GastosFragment
+SemanaFragment --> IngresosFragmentSemana
+SemanaFragment --> GastosFragmentSemana
+MesFragment --> IngresosFragmentMes
+MesFragment --> GastosFragmentMes
+AnioFragment --> IngresosFragmentAnio
+AnioFragment --> GastosFragmentAnio
+AnadirCategoria --> AppCompatActivity
+AnadirCategoriaOtro --> AppCompatActivity
+GastosAdapter --> GastosViewHolder
+GastosViewHolder --> TextView
+GastosViewHolder --> ImageView
+GastosViewHolder --> EditText
+GastosAdapter --> LayoutInflater
+GastosAdapter --> RecyclerView
+GastosManager --> Gasto
+GastosManager ..> GastosUpdateListener
+
+Loading : +btnWelcomeClickListener(): Void
+IniciarSesion : +onCreate(savedInstanceState: Bundle?): Void
+IniciarSesion : -btnSignInClickListener(view: View): Void
+IniciarSesion : -btnSignUpRedirectClickListener(view: View): Void
+IniciarSesion : -btnForgotPasswordClickListener(view: View): Void
+IniciarSesion : -initGoogleSignIn(): Void
+Registrar : +onCreate(savedInstanceState: Bundle?): Void
+Registrar : -btnSignUpClickListener(view: View): Void
+Registrar : -btnLoginRedirectClickListener(view: View): Void
+
+CustomAdapter "1" *-- "1..*" ViewHolder
+CategoriaGastoActivity "1" *-- "1" Toolbar
+CategoriaGastoActivity "1" *-- "1" GridView
+CategoriaGastoActivity "1" *-- "1" CategoriasAdapter
+CategoriaGastoActivity "1" o-- "1" Intent
+CategoriasAdapter "1" o-- "1" Context
+CategoriasAdapter "1" o-- "1" Intent
+CategoriasAdapter "1" o-- "1" LayoutInflater
+CategoriasAdapter "1" o-- "1" View
+CategoriasAdapter "1" o-- "1" ViewGroup
+CategoriasAdapter "1" o-- "1" ImageView
+CategoriasAdapter "1" o-- "1" TextView
+AnadirCategoria "1" o-- "1" Intent
+AnadirCategoria "1" o-- "1" Bundle
+AnadirCategoria "1" o-- "1" Button
+AnadirCategoria "1" o-- "1" EditText
+AnadirCategoria "1" o-- "1" ImageView
+AnadirCategoria "1" o-- "1" TextView
+AnadirCategoria "1" o-- "1" Notas
+AnadirCategoria "1" o-- "1" R
+AnadirCategoriaOtro "1" o-- "1" Intent
+AnadirCategoriaOtro "1" o-- "1" Bundle
+AnadirCategoriaOtro "1" o-- "1" ShapeableImageView
+AnadirCategoriaOtro "1" o-- "1" Activity
+AnadirCategoriaOtro "1" o-- "1" MediaStore
+AnadirCategoriaOtro "1" o-- "1" R
+Gasto "1" o-- "1" EditText
+GastosAdapter "1" *-- "0..*" Gasto
+
+@enduml

@@ -4,44 +4,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".Billetera">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_initial"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarBack"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        tools:ignore="MissingConstraints">
-
-    </androidx.cardview.widget.CardView>
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/back"
+        app:navigationIconTint="@color/black"
+        app:title="ScanPiggy"
+        app:titleCentered="true"
+        app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        app:titleTextColor="@color/black"/>
 
     <LinearLayout
-        android:layout_width="375dp"
-        android:layout_height="117dp"
+        android:layout_width="306dp"
+        android:layout_height="137dp"
         android:orientation="vertical"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.647"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_initial"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewTajetasDeCredito"
         tools:ignore="MissingConstraints">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="345dp"
             android:layout_height="wrap_content"
-            android:text="Agrega una cuenta bancaria"
+            android:text="@string/agrega_una_tarjeta_de_cr_dito"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
         <Button
             android:id="@+id/btn_add_card"
-            android:layout_width="match_parent"
+            android:layout_width="257dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:backgroundTint="@color/colorPrimary"
+            android:backgroundTint="@color/lavender"
             android:text="Añadir tarjeta"
             android:textColor="@android:color/white" />
 
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewTajetasDeCredito"
+        android:layout_width="403dp"
+        android:layout_height="352dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarBack"
+        app:layout_constraintVertical_bias="0.073" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
