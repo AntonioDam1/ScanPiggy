@@ -13,10 +13,10 @@ import androidx.appcompat.widget.Toolbar
 import com.example.scanpiggy.CategoriaGastoActivity
 import com.example.scanpiggy.Gasto
 import com.example.scanpiggy.GastosManager
-import com.example.scanpiggy.Notas
 import com.example.scanpiggy.R
 
 class AnadirCategoria : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_anadir_categoria)
@@ -71,8 +71,6 @@ class AnadirCategoria : AppCompatActivity() {
             nombreCategoria?.let { nombreCategoriaView.text = it }
         }
     }
-
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
