@@ -200,7 +200,8 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
                 val floatingButton: FloatingActionButton = rootView.findViewById(R.id.floatingAnadirGastos)
 
                 floatingButton.setOnClickListener {
-                    val intent = Intent(requireContext(), AnadirCategoria::class.java)
+                    // Iniciar la actividad CategoriaGastoActivity
+                    val intent = Intent(requireContext(), CategoriaGastoActivity::class.java)
                     startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY)
                 }
 
@@ -229,10 +230,12 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
             override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
                 super.onActivityResult(requestCode, resultCode, data)
                 if (requestCode == REQUEST_CODE_ADD_CATEGORY && resultCode == Activity.RESULT_OK) {
+                    // Actualizar la lista de gastos después de añadir una categoría
                     updateUI()
                 }
             }
         }
+
 
 
     }

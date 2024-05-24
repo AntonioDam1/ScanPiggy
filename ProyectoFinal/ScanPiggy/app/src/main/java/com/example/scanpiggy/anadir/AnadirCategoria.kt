@@ -37,9 +37,11 @@ class AnadirCategoria : AppCompatActivity() {
             val cantidad = cantidadEditText.text.toString()
             val comentario = comentarioEditText.text.toString()
 
+            // Crear el objeto de gasto y añadirlo a la lista de gastos
             val nuevoGasto = Gasto(imagenCategoria, nombreCategoria ?: "", cantidad, comentario)
             GastosManager.addGasto(nuevoGasto)
 
+            // Devolver el resultado a GastosFragment
             val resultIntent = Intent()
             setResult(Activity.RESULT_OK, resultIntent)
             finish()
@@ -50,7 +52,6 @@ class AnadirCategoria : AppCompatActivity() {
             val intent = Intent(this, CategoriaGastoActivity::class.java)
             startActivityForResult(intent, REQUEST_SELECT_CATEGORY)
         }
-
     }
 
     companion object {
