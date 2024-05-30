@@ -28,7 +28,7 @@ class CategoriaGastoActivity : AppCompatActivity() {
         "Otros"
     )
 
-    val coloresCategorias = intArrayOf(
+    private val coloresCategorias = intArrayOf(
         android.R.color.holo_red_light,
         android.R.color.holo_green_light,
         android.R.color.holo_orange_light,
@@ -36,7 +36,6 @@ class CategoriaGastoActivity : AppCompatActivity() {
         android.R.color.holo_red_light,
         android.R.color.holo_red_light
     )
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,11 +50,8 @@ class CategoriaGastoActivity : AppCompatActivity() {
 
         // Configurar el GridView
         val gridView: GridView = findViewById(R.id.GridViewGategoriasGastos)
-        val categoriasAdapter = CategoriasAdapter(this, imagenesCategorias, nombresCategorias,coloresCategorias)
-        // En el adaptador de tu GridView, en el método getView() o similar:
-        gridView.setBackgroundResource(R.drawable.grid_item_border)
-
-        gridView.adapter = categoriasAdapter
+        val categoriasAdapter = CategoriasAdapter(this, imagenesCategorias, nombresCategorias, coloresCategorias)
+        gridView.setAdapter(categoriasAdapter)
 
         gridView.setOnItemClickListener { parent, view, position, id ->
             val categoriaSeleccionada = nombresCategorias[position]

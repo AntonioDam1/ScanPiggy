@@ -47,6 +47,3 @@ class GastosAdapter : ListAdapter<Gasto, GastosAdapter.GastoViewHolder>(GastoDif
         }
     }
 }
-
-
-

@@ -1,47 +1,70 @@
-<!-- item_categoria.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="8dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/recCard"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginVertical="10dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp">
 
-    <ImageView
-        android:id="@+id/imageCategoria"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/ic_launcher" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:layout_marginStart="8dp">
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/imageCategoria"
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/roundedImageViewRounded"/>
 
         <TextView
-            android:id="@+id/textNombreCategoria"
-            android:layout_width="match_parent"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="Nombre de la categoría"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:id="@+id/textNombreCategoria"
+            android:text="Nombre de la categoria"
+            android:textColor="@color/colorPressed"
+            android:textSize="10sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/imageCategoria"/>
+
+        <TextView
+            android:id="@+id/textCantidad"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="21dp"
+            android:layout_marginTop="28dp"
+            android:layout_toEndOf="@+id/textComentario"
+            android:text="Cantidad"
+            android:textAlignment="center"
+            android:textColor="@color/lavender"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/textComentario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Comentario"
-            android:textSize="14sp"/>
+            android:layout_width="171dp"
+            android:layout_height="32dp"
+            android:layout_below="@+id/textNombreCategoria"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="12dp"
+            android:layout_toEndOf="@+id/imageCategoria"
+            android:maxLines="1"
+            android:text="comentario"
+            android:textColor="@color/lavender"
+            android:textSize="16sp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/textCantidad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cantidad"
-        android:textSize="16sp"
-        android:textStyle="bold"/>
-
-</LinearLayout>
+</androidx.cardview.widget.CardView>

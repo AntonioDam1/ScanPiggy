@@ -26,6 +26,11 @@
     <string name="no_est_s_registrado_registrate">¿No estás registrado? Sign Up</string>
     <string name="ya_tienes_un_usuario_login">¿Ya tienes un usuario? Login</string>
     <string name="agrega_una_tarjeta_de_cr_dito">Agrega una tarjeta de crédito</string>
+    <string name="presupuesto">Presupuesto:</string>
+    <string name="registra_tus_movimientos_financieros_gastos_o_ingresos">Registra tus movimientos financieros: Gastos o Ingresos.</string>
+    <string name="_1000">1000 €</string>
+    <string name="cerrar_aplicaci_n">Cerrar Aplicación</string>
+    <string name="consejos_financieros">Consejos Financieros</string>
 
 
 </resources>

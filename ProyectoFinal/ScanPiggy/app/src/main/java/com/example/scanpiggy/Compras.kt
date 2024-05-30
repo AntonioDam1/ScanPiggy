@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
@@ -56,6 +57,18 @@ class Compras : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
         val navViewLateral: NavigationView = findViewById(R.id.nav_view_lateral)
         navViewLateral.setNavigationItemSelectedListener(this)
 
+        // Mostrar el correo electrónico del usuario en el NavigationView
+        val headerView = navViewLateral.getHeaderView(0)
+        val emailTextView = headerView.findViewById<TextView>(R.id.nav_header_email)
+        emailTextView.text = currentUser?.email
+
+        val profileImageView = headerView.findViewById<ImageView>(R.id.imageViewFotoPerfil)
+        profileImageView.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startForResult.launch(intent)
+        }
+
     }
 
     private val startForResult =
@@ -83,16 +96,31 @@ class Compras : AppCompatActivity(), NavigationView.OnNavigationItemSelectedList
         drawerToggle.syncState()
     }
 
+    private fun closeApp() {
+        // Cerrar todas las actividades abiertas
+        finishAffinity()
+
+        // Salir del proceso de la aplicación
+        System.exit(0)
+    }
+
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_billetera -> {
                 val intent = Intent(this, Billetera::class.java)
                 startActivity(intent)
+                return true
+            }
+            R.id.exit -> {
+                // Cerrar la aplicación
+                closeApp()
+                return true
             }
             // Otros casos de ítems del menú
         }
         // Cerrar el drawer después de manejar el clic del usuario
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout_compras)
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }

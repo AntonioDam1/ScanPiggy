@@ -33,7 +33,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.226" />
 
-
     <GridView
         android:id="@+id/GridViewGategoriasGastos"
         android:layout_width="344dp"

@@ -22,8 +22,10 @@ import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.example.scanpiggy.adapter.DiaViewPagerAdapter
 import com.example.scanpiggy.adapter.GastosAdapter
+import com.example.scanpiggy.adapter.IngresosAdapter
 import com.example.scanpiggy.adapter.ViewPagerAdapter
 import com.example.scanpiggy.anadir.AnadirCategoria
+import com.example.scanpiggy.anadir.AnadirCategoriaIngresos
 import com.example.scanpiggy.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -38,6 +40,8 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
     private lateinit var auth: FirebaseAuth
     private var currentUser: FirebaseUser? = null
 
+    private var currentUserEmail: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -46,6 +50,8 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
 
         auth = FirebaseAuth.getInstance()
         currentUser = auth.currentUser
+
+        currentUserEmail = auth.currentUser?.email
 
         setupDrawer()
 
@@ -68,8 +74,20 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
             }
         }
 
-        val navViewLateral: NavigationView = findViewById(R.id.nav_view_lateral_notas)
+        val navViewLateral: NavigationView = findViewById(R.id.nav_view_lateral)
         navViewLateral.setNavigationItemSelectedListener(this)
+
+        // Mostrar el correo electrónico del usuario en el NavigationView
+        val headerView = navViewLateral.getHeaderView(0)
+        val emailTextView = headerView.findViewById<TextView>(R.id.nav_header_email)
+        emailTextView.text = currentUser?.email
+
+        val profileImageView = headerView.findViewById<ImageView>(R.id.imageViewFotoPerfil)
+        profileImageView.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startForResult.launch(intent)
+        }
 
 
 
@@ -84,17 +102,7 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
 
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
-        // Mostrar el correo electrónico del usuario en el NavigationView
-        val headerView = navViewLateral.getHeaderView(0)
-        val emailTextView = headerView.findViewById<TextView>(R.id.nav_header_email)
-        emailTextView.text = currentUser?.email
 
-        val profileImageView = headerView.findViewById<ImageView>(R.id.imageViewFotoPerfil)
-        profileImageView.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startForResult.launch(intent)
-        }
 
     }
 
@@ -134,16 +142,31 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
         }
     }
 
+    private fun closeApp() {
+        // Cerrar todas las actividades abiertas
+        finishAffinity()
+
+        // Salir del proceso de la aplicación
+        System.exit(0)
+    }
+
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_billetera -> {
                 val intent = Intent(this, Billetera::class.java)
                 startActivity(intent)
+                return true
+            }
+            R.id.exit -> {
+                // Cerrar la aplicación
+                closeApp()
+                return true
             }
             // Otros casos de ítems del menú
         }
         // Cerrar el drawer después de manejar el clic del usuario
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout_notas)
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
@@ -172,16 +195,6 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
             tabLayoutDia.setupWithViewPager(viewPagerDia)
         }
 
-        class IngresosFragment : Fragment() {
-            override fun onCreateView(
-                inflater: LayoutInflater, container: ViewGroup?,
-                savedInstanceState: Bundle?
-            ): View? {
-                // Inflar el diseño del fragmento
-                return inflater.inflate(R.layout.fragment_ingresos, container, false)
-            }
-        }
-
         class GastosFragment : Fragment() {
 
             private lateinit var recyclerViewGastos: RecyclerView
@@ -200,8 +213,7 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
                 val floatingButton: FloatingActionButton = rootView.findViewById(R.id.floatingAnadirGastos)
 
                 floatingButton.setOnClickListener {
-                    // Iniciar la actividad CategoriaGastoActivity
-                    val intent = Intent(requireContext(), CategoriaGastoActivity::class.java)
+                    val intent = Intent(requireContext(), AnadirCategoria::class.java)
                     startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY)
                 }
 
@@ -230,13 +242,82 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
             override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
                 super.onActivityResult(requestCode, resultCode, data)
                 if (requestCode == REQUEST_CODE_ADD_CATEGORY && resultCode == Activity.RESULT_OK) {
-                    // Actualizar la lista de gastos después de añadir una categoría
-                    updateUI()
+                    val imagenId = data?.getIntExtra("imagenId", R.drawable.addphotoalternate)
+                    val nombreCategoria = data?.getStringExtra("nombreCategoria")
+                    val cantidad = data?.getStringExtra("cantidad")
+                    val comentario = data?.getStringExtra("comentario")
+
+                    // Crea un nuevo Gasto y agrega a la lista
+                    if (imagenId != null && nombreCategoria != null && cantidad != null && comentario != null) {
+                        val nuevoGasto = Gasto(imagenId, nombreCategoria, cantidad, comentario)
+                        GastosManager.addGasto(nuevoGasto)
+                        updateUI()
+                    }
                 }
             }
+
         }
 
+        class IngresosFragment : Fragment() {
+            private lateinit var recyclerViewIngresos :  RecyclerView
+            private lateinit var textoSinCategorias: TextView
+            private val ingresosAdapter = IngresosAdapter()
+            private val REQUEST_CODE_ADD_CATEGORY = 1
+            override fun onCreateView(
+                inflater: LayoutInflater, container: ViewGroup?,
+                savedInstanceState: Bundle?
+            ): View? {
+                val rootView = inflater.inflate(R.layout.fragment_ingresos, container, false)
 
+                recyclerViewIngresos = rootView.findViewById(R.id.recyclerViewIngresos)
+                textoSinCategorias = rootView.findViewById(R.id.textoSinCategoriasIngresos)
+                val floatingButton: FloatingActionButton = rootView.findViewById(R.id.floatingAnadirIngresos)
+
+                floatingButton.setOnClickListener {
+                    val intent = Intent(requireContext(), AnadirCategoriaIngresos::class.java)
+                    startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY)
+                }
+
+                return rootView
+            }
+
+            override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+                super.onViewCreated(view, savedInstanceState)
+                recyclerViewIngresos.layoutManager = LinearLayoutManager(requireContext())
+                recyclerViewIngresos.adapter = ingresosAdapter
+                updateUI()
+            }
+
+            private fun updateUI() {
+                val ingresos = IngresosManager.getIngresos()
+                if (ingresos.isEmpty()) {
+                    textoSinCategorias.visibility = View.VISIBLE
+                    recyclerViewIngresos.visibility = View.GONE
+                } else {
+                    textoSinCategorias.visibility = View.GONE
+                    recyclerViewIngresos.visibility = View.VISIBLE
+                    ingresosAdapter.submitList(ingresos)
+                }
+            }
+
+            override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+                super.onActivityResult(requestCode, resultCode, data)
+                if (requestCode == REQUEST_CODE_ADD_CATEGORY && resultCode == Activity.RESULT_OK) {
+                    val imagenId = data?.getIntExtra("imagenId", R.drawable.addphotoalternate)
+                    val nombreCategoria = data?.getStringExtra("nombreCategoria")
+                    val cantidad = data?.getStringExtra("cantidad")
+                    val comentario = data?.getStringExtra("comentario")
+
+                    // Crea un nuevo Gasto y agrega a la lista
+                    if (imagenId != null && nombreCategoria != null && cantidad != null && comentario != null) {
+                        val nuevoIngresos = Ingresos(imagenId, nombreCategoria, cantidad, comentario)
+                        IngresosManager.addIngresos(nuevoIngresos)
+                        updateUI()
+                    }
+                }
+            }
+
+        }
 
     }
 
@@ -257,30 +338,134 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
 
         private fun setupViewPager() {
             val adapter = DiaViewPagerAdapter(childFragmentManager)
-            adapter.addFragment(GastosFragmentSemana(), "Gastos")
-            adapter.addFragment(IngresosFragmentSemana(), "Ingresos")
+            adapter.addFragment(GastosFragment(), "Gastos")
+            adapter.addFragment(IngresosFragment(), "Ingresos")
             viewPagerSemana.adapter = adapter
             tabLayoutSemana.setupWithViewPager(viewPagerSemana)
         }
 
-        class IngresosFragmentSemana : Fragment() {
+        class GastosFragment : Fragment() {
+
+            private lateinit var recyclerViewGastos: RecyclerView
+            private lateinit var textoSinCategorias: TextView
+            private val gastosAdapter = GastosAdapter()
+            private val REQUEST_CODE_ADD_CATEGORY = 1
+
             override fun onCreateView(
                 inflater: LayoutInflater, container: ViewGroup?,
                 savedInstanceState: Bundle?
             ): View? {
-                // Inflar el diseño del fragmento
-                return inflater.inflate(R.layout.fragment_ingresos, container, false)
+                val rootView = inflater.inflate(R.layout.fragment_gastos, container, false)
+
+                recyclerViewGastos = rootView.findViewById(R.id.recyclerViewGastos)
+                textoSinCategorias = rootView.findViewById(R.id.textoSinCategorias)
+                val floatingButton: FloatingActionButton = rootView.findViewById(R.id.floatingAnadirGastos)
+
+                floatingButton.setOnClickListener {
+                    val intent = Intent(requireContext(), AnadirCategoria::class.java)
+                    startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY)
+                }
+
+                return rootView
             }
+
+            override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+                super.onViewCreated(view, savedInstanceState)
+                recyclerViewGastos.layoutManager = LinearLayoutManager(requireContext())
+                recyclerViewGastos.adapter = gastosAdapter
+                updateUI()
+            }
+
+            private fun updateUI() {
+                val gastos = GastosManager.getGastos()
+                if (gastos.isEmpty()) {
+                    textoSinCategorias.visibility = View.VISIBLE
+                    recyclerViewGastos.visibility = View.GONE
+                } else {
+                    textoSinCategorias.visibility = View.GONE
+                    recyclerViewGastos.visibility = View.VISIBLE
+                    gastosAdapter.submitList(gastos)
+                }
+            }
+
+            override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+                super.onActivityResult(requestCode, resultCode, data)
+                if (requestCode == REQUEST_CODE_ADD_CATEGORY && resultCode == Activity.RESULT_OK) {
+                    val imagenId = data?.getIntExtra("imagenId", R.drawable.addphotoalternate)
+                    val nombreCategoria = data?.getStringExtra("nombreCategoria")
+                    val cantidad = data?.getStringExtra("cantidad")
+                    val comentario = data?.getStringExtra("comentario")
+
+                    // Crea un nuevo Gasto y agrega a la lista
+                    if (imagenId != null && nombreCategoria != null && cantidad != null && comentario != null) {
+                        val nuevoGasto = Gasto(imagenId, nombreCategoria, cantidad, comentario)
+                        GastosManager.addGasto(nuevoGasto)
+                        updateUI()
+                    }
+                }
+            }
+
         }
 
-        class GastosFragmentSemana : Fragment() {
+        class IngresosFragment : Fragment() {
+            private lateinit var recyclerViewIngresos :  RecyclerView
+            private lateinit var textoSinCategorias: TextView
+            private val ingresosAdapter = IngresosAdapter()
+            private val REQUEST_CODE_ADD_CATEGORY = 1
             override fun onCreateView(
                 inflater: LayoutInflater, container: ViewGroup?,
                 savedInstanceState: Bundle?
             ): View? {
-                // Inflar el diseño del fragmento
-                return inflater.inflate(R.layout.fragment_gastos, container, false)
+                val rootView = inflater.inflate(R.layout.fragment_ingresos, container, false)
+
+                recyclerViewIngresos = rootView.findViewById(R.id.recyclerViewIngresos)
+                textoSinCategorias = rootView.findViewById(R.id.textoSinCategoriasIngresos)
+                val floatingButton: FloatingActionButton = rootView.findViewById(R.id.floatingAnadirIngresos)
+
+                floatingButton.setOnClickListener {
+                    val intent = Intent(requireContext(), AnadirCategoriaIngresos::class.java)
+                    startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY)
+                }
+
+                return rootView
             }
+
+            override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+                super.onViewCreated(view, savedInstanceState)
+                recyclerViewIngresos.layoutManager = LinearLayoutManager(requireContext())
+                recyclerViewIngresos.adapter = ingresosAdapter
+                updateUI()
+            }
+
+            private fun updateUI() {
+                val ingresos = IngresosManager.getIngresos()
+                if (ingresos.isEmpty()) {
+                    textoSinCategorias.visibility = View.VISIBLE
+                    recyclerViewIngresos.visibility = View.GONE
+                } else {
+                    textoSinCategorias.visibility = View.GONE
+                    recyclerViewIngresos.visibility = View.VISIBLE
+                    ingresosAdapter.submitList(ingresos)
+                }
+            }
+
+            override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+                super.onActivityResult(requestCode, resultCode, data)
+                if (requestCode == REQUEST_CODE_ADD_CATEGORY && resultCode == Activity.RESULT_OK) {
+                    val imagenId = data?.getIntExtra("imagenId", R.drawable.addphotoalternate)
+                    val nombreCategoria = data?.getStringExtra("nombreCategoria")
+                    val cantidad = data?.getStringExtra("cantidad")
+                    val comentario = data?.getStringExtra("comentario")
+
+                    // Crea un nuevo Gasto y agrega a la lista
+                    if (imagenId != null && nombreCategoria != null && cantidad != null && comentario != null) {
+                        val nuevoIngresos = Ingresos(imagenId, nombreCategoria, cantidad, comentario)
+                        IngresosManager.addIngresos(nuevoIngresos)
+                        updateUI()
+                    }
+                }
+            }
+
         }
     }
 
@@ -300,30 +485,134 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
 
         private fun setupViewPager() {
             val adapter = DiaViewPagerAdapter(childFragmentManager)
-            adapter.addFragment(GastosFragmentMes(), "Gastos")
-            adapter.addFragment(IngresosFragmentMes(), "Ingresos")
+            adapter.addFragment(GastosFragment(), "Gastos")
+            adapter.addFragment(IngresosFragment(), "Ingresos")
             viewPagerMes.adapter = adapter
             tabLayoutMes.setupWithViewPager(viewPagerMes)
         }
 
-        class IngresosFragmentMes : Fragment() {
+        class GastosFragment : Fragment() {
+
+            private lateinit var recyclerViewGastos: RecyclerView
+            private lateinit var textoSinCategorias: TextView
+            private val gastosAdapter = GastosAdapter()
+            private val REQUEST_CODE_ADD_CATEGORY = 1
+
             override fun onCreateView(
                 inflater: LayoutInflater, container: ViewGroup?,
                 savedInstanceState: Bundle?
             ): View? {
-                // Inflar el diseño del fragmento
-                return inflater.inflate(R.layout.fragment_ingresos, container, false)
+                val rootView = inflater.inflate(R.layout.fragment_gastos, container, false)
+
+                recyclerViewGastos = rootView.findViewById(R.id.recyclerViewGastos)
+                textoSinCategorias = rootView.findViewById(R.id.textoSinCategorias)
+                val floatingButton: FloatingActionButton = rootView.findViewById(R.id.floatingAnadirGastos)
+
+                floatingButton.setOnClickListener {
+                    val intent = Intent(requireContext(), AnadirCategoria::class.java)
+                    startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY)
+                }
+
+                return rootView
             }
+
+            override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+                super.onViewCreated(view, savedInstanceState)
+                recyclerViewGastos.layoutManager = LinearLayoutManager(requireContext())
+                recyclerViewGastos.adapter = gastosAdapter
+                updateUI()
+            }
+
+            private fun updateUI() {
+                val gastos = GastosManager.getGastos()
+                if (gastos.isEmpty()) {
+                    textoSinCategorias.visibility = View.VISIBLE
+                    recyclerViewGastos.visibility = View.GONE
+                } else {
+                    textoSinCategorias.visibility = View.GONE
+                    recyclerViewGastos.visibility = View.VISIBLE
+                    gastosAdapter.submitList(gastos)
+                }
+            }
+
+            override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+                super.onActivityResult(requestCode, resultCode, data)
+                if (requestCode == REQUEST_CODE_ADD_CATEGORY && resultCode == Activity.RESULT_OK) {
+                    val imagenId = data?.getIntExtra("imagenId", R.drawable.addphotoalternate)
+                    val nombreCategoria = data?.getStringExtra("nombreCategoria")
+                    val cantidad = data?.getStringExtra("cantidad")
+                    val comentario = data?.getStringExtra("comentario")
+
+                    // Crea un nuevo Gasto y agrega a la lista
+                    if (imagenId != null && nombreCategoria != null && cantidad != null && comentario != null) {
+                        val nuevoGasto = Gasto(imagenId, nombreCategoria, cantidad, comentario)
+                        GastosManager.addGasto(nuevoGasto)
+                        updateUI()
+                    }
+                }
+            }
+
         }
 
-        class GastosFragmentMes : Fragment() {
+        class IngresosFragment : Fragment() {
+            private lateinit var recyclerViewIngresos :  RecyclerView
+            private lateinit var textoSinCategorias: TextView
+            private val ingresosAdapter = IngresosAdapter()
+            private val REQUEST_CODE_ADD_CATEGORY = 1
             override fun onCreateView(
                 inflater: LayoutInflater, container: ViewGroup?,
                 savedInstanceState: Bundle?
             ): View? {
-                // Inflar el diseño del fragmento
-                return inflater.inflate(R.layout.fragment_gastos, container, false)
+                val rootView = inflater.inflate(R.layout.fragment_ingresos, container, false)
+
+                recyclerViewIngresos = rootView.findViewById(R.id.recyclerViewIngresos)
+                textoSinCategorias = rootView.findViewById(R.id.textoSinCategoriasIngresos)
+                val floatingButton: FloatingActionButton = rootView.findViewById(R.id.floatingAnadirIngresos)
+
+                floatingButton.setOnClickListener {
+                    val intent = Intent(requireContext(), AnadirCategoriaIngresos::class.java)
+                    startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY)
+                }
+
+                return rootView
             }
+
+            override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+                super.onViewCreated(view, savedInstanceState)
+                recyclerViewIngresos.layoutManager = LinearLayoutManager(requireContext())
+                recyclerViewIngresos.adapter = ingresosAdapter
+                updateUI()
+            }
+
+            private fun updateUI() {
+                val ingresos = IngresosManager.getIngresos()
+                if (ingresos.isEmpty()) {
+                    textoSinCategorias.visibility = View.VISIBLE
+                    recyclerViewIngresos.visibility = View.GONE
+                } else {
+                    textoSinCategorias.visibility = View.GONE
+                    recyclerViewIngresos.visibility = View.VISIBLE
+                    ingresosAdapter.submitList(ingresos)
+                }
+            }
+
+            override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+                super.onActivityResult(requestCode, resultCode, data)
+                if (requestCode == REQUEST_CODE_ADD_CATEGORY && resultCode == Activity.RESULT_OK) {
+                    val imagenId = data?.getIntExtra("imagenId", R.drawable.addphotoalternate)
+                    val nombreCategoria = data?.getStringExtra("nombreCategoria")
+                    val cantidad = data?.getStringExtra("cantidad")
+                    val comentario = data?.getStringExtra("comentario")
+
+                    // Crea un nuevo Gasto y agrega a la lista
+                    if (imagenId != null && nombreCategoria != null && cantidad != null && comentario != null) {
+                        val nuevoIngresos = Ingresos(imagenId, nombreCategoria, cantidad, comentario)
+                        IngresosManager.addIngresos(nuevoIngresos)
+                        updateUI()
+                    }
+                }
+            }
+
         }
     }
 
@@ -343,30 +632,133 @@ class Notas : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListen
 
         private fun setupViewPager() {
             val adapter = DiaViewPagerAdapter(childFragmentManager)
-            adapter.addFragment(GastosFragmentAnio(), "Gastos")
-            adapter.addFragment(IngresosFragmentAnio(), "Ingresos")
+            adapter.addFragment(GastosFragment(), "Gastos")
+            adapter.addFragment(IngresosFragment(), "Ingresos")
             viewPagerAnio.adapter = adapter
             tabLayoutAnio.setupWithViewPager(viewPagerAnio)
         }
 
-        class IngresosFragmentAnio : Fragment() {
+        class GastosFragment : Fragment() {
+
+            private lateinit var recyclerViewGastos: RecyclerView
+            private lateinit var textoSinCategorias: TextView
+            private val gastosAdapter = GastosAdapter()
+            private val REQUEST_CODE_ADD_CATEGORY = 1
+
             override fun onCreateView(
                 inflater: LayoutInflater, container: ViewGroup?,
                 savedInstanceState: Bundle?
             ): View? {
-                // Inflar el diseño del fragmento
-                return inflater.inflate(R.layout.fragment_ingresos, container, false)
+                val rootView = inflater.inflate(R.layout.fragment_gastos, container, false)
+
+                recyclerViewGastos = rootView.findViewById(R.id.recyclerViewGastos)
+                textoSinCategorias = rootView.findViewById(R.id.textoSinCategorias)
+                val floatingButton: FloatingActionButton = rootView.findViewById(R.id.floatingAnadirGastos)
+
+                floatingButton.setOnClickListener {
+                    val intent = Intent(requireContext(), AnadirCategoria::class.java)
+                    startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY)
+                }
+
+                return rootView
+            }
+
+            override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+                super.onViewCreated(view, savedInstanceState)
+                recyclerViewGastos.layoutManager = LinearLayoutManager(requireContext())
+                recyclerViewGastos.adapter = gastosAdapter
+                updateUI()
+            }
+
+            private fun updateUI() {
+                val gastos = GastosManager.getGastos()
+                if (gastos.isEmpty()) {
+                    textoSinCategorias.visibility = View.VISIBLE
+                    recyclerViewGastos.visibility = View.GONE
+                } else {
+                    textoSinCategorias.visibility = View.GONE
+                    recyclerViewGastos.visibility = View.VISIBLE
+                    gastosAdapter.submitList(gastos)
+                }
+            }
+
+            override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+                super.onActivityResult(requestCode, resultCode, data)
+                if (requestCode == REQUEST_CODE_ADD_CATEGORY && resultCode == Activity.RESULT_OK) {
+                    val imagenId = data?.getIntExtra("imagenId", R.drawable.addphotoalternate)
+                    val nombreCategoria = data?.getStringExtra("nombreCategoria")
+                    val cantidad = data?.getStringExtra("cantidad")
+                    val comentario = data?.getStringExtra("comentario")
+
+                    // Crea un nuevo Gasto y agrega a la lista
+                    if (imagenId != null && nombreCategoria != null && cantidad != null && comentario != null) {
+                        val nuevoGasto = Gasto(imagenId, nombreCategoria, cantidad, comentario)
+                        GastosManager.addGasto(nuevoGasto)
+                        updateUI()
+                    }
+                }
             }
         }
 
-        class GastosFragmentAnio : Fragment() {
+        class IngresosFragment : Fragment() {
+            private lateinit var recyclerViewIngresos :  RecyclerView
+            private lateinit var textoSinCategorias: TextView
+            private val ingresosAdapter = IngresosAdapter()
+            private val REQUEST_CODE_ADD_CATEGORY = 1
             override fun onCreateView(
                 inflater: LayoutInflater, container: ViewGroup?,
                 savedInstanceState: Bundle?
             ): View? {
-                // Inflar el diseño del fragmento
-                return inflater.inflate(R.layout.fragment_gastos, container, false)
+                val rootView = inflater.inflate(R.layout.fragment_ingresos, container, false)
+
+                recyclerViewIngresos = rootView.findViewById(R.id.recyclerViewIngresos)
+                textoSinCategorias = rootView.findViewById(R.id.textoSinCategoriasIngresos)
+                val floatingButton: FloatingActionButton = rootView.findViewById(R.id.floatingAnadirIngresos)
+
+                floatingButton.setOnClickListener {
+                    val intent = Intent(requireContext(), AnadirCategoriaIngresos::class.java)
+                    startActivityForResult(intent, REQUEST_CODE_ADD_CATEGORY)
+                }
+
+                return rootView
             }
+
+            override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+                super.onViewCreated(view, savedInstanceState)
+                recyclerViewIngresos.layoutManager = LinearLayoutManager(requireContext())
+                recyclerViewIngresos.adapter = ingresosAdapter
+                updateUI()
+            }
+
+            private fun updateUI() {
+                val ingresos = IngresosManager.getIngresos()
+                if (ingresos.isEmpty()) {
+                    textoSinCategorias.visibility = View.VISIBLE
+                    recyclerViewIngresos.visibility = View.GONE
+                } else {
+                    textoSinCategorias.visibility = View.GONE
+                    recyclerViewIngresos.visibility = View.VISIBLE
+                    ingresosAdapter.submitList(ingresos)
+                }
+            }
+
+            override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+                super.onActivityResult(requestCode, resultCode, data)
+                if (requestCode == REQUEST_CODE_ADD_CATEGORY && resultCode == Activity.RESULT_OK) {
+                    val imagenId = data?.getIntExtra("imagenId", R.drawable.addphotoalternate)
+                    val nombreCategoria = data?.getStringExtra("nombreCategoria")
+                    val cantidad = data?.getStringExtra("cantidad")
+                    val comentario = data?.getStringExtra("comentario")
+
+                    // Crea un nuevo Gasto y agrega a la lista
+                    if (imagenId != null && nombreCategoria != null && cantidad != null && comentario != null) {
+                        val nuevoIngresos = Ingresos(imagenId, nombreCategoria, cantidad, comentario)
+                        IngresosManager.addIngresos(nuevoIngresos)
+                        updateUI()
+                    }
+                }
+            }
+
         }
     }
 }

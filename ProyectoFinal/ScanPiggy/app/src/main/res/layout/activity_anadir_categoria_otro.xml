@@ -22,7 +22,7 @@
         app:titleTextColor="@color/black"/>
 
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <ImageView
         android:id="@+id/imageCategoriaOtro"
         android:layout_width="90dp"
         android:layout_height="90dp"
@@ -33,8 +33,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbarBack"
-        app:layout_constraintVertical_bias="0.05"
-        app:shapeAppearanceOverlay="@style/roundedImageView" />
+        app:layout_constraintVertical_bias="0.05" />
 
     <EditText
         android:id="@+id/textNombreCategoriaOtro"
@@ -53,11 +52,13 @@
         app:layout_constraintVertical_bias="0.075" />
 
     <EditText
-        android:id="@+id/editCantidad"
+        android:id="@+id/textCantidadOtro"
         android:layout_width="339dp"
         android:layout_height="40dp"
         android:layout_below="@id/textNombreCategoriaOtro"
         android:hint="Cantidad"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,31 +66,33 @@
         app:layout_constraintVertical_bias="0.164" />
 
     <EditText
-        android:id="@+id/editComentario"
+        android:id="@+id/textComentarioOtro"
         android:layout_width="342dp"
         android:layout_height="47dp"
-        android:layout_below="@id/editCantidad"
+        android:layout_below="@id/textCantidadOtro"
         android:hint="Comentario"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.478"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editCantidad"
+        app:layout_constraintTop_toBottomOf="@+id/textCantidadOtro"
         app:layout_constraintVertical_bias="0.181" />
 
     <Button
-        android:id="@+id/btnAdd"
+        android:id="@+id/btnAnadirCategoriaOtro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editComentario"
+        android:layout_below="@id/textComentarioOtro"
         android:layout_centerHorizontal="true"
         android:text="Añadir"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editComentario"
+        app:layout_constraintTop_toBottomOf="@+id/textComentarioOtro"
         app:layout_constraintVertical_bias="0.383" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

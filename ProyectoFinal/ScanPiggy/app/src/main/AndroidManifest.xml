@@ -16,6 +16,15 @@
         android:theme="@style/Theme.ScanPiggy"
         tools:targetApi="31" >
         <activity
+            android:name=".SplashScreen"
+            android:exported="false" />
+        <activity
+            android:name=".anadir.AnadirCategoriaIngresos"
+            android:exported="false" />
+        <activity
+            android:name=".CategoriaIngresos"
+            android:exported="false" />
+        <activity
             android:name=".Compras"
             android:exported="false" />
         <activity

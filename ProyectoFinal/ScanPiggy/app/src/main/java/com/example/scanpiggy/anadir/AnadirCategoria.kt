@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar
 import com.example.scanpiggy.CategoriaGastoActivity
 import com.example.scanpiggy.Gasto
 import com.example.scanpiggy.GastosManager
+import com.example.scanpiggy.Notas
 import com.example.scanpiggy.R
 
 class AnadirCategoria : AppCompatActivity() {
@@ -26,6 +27,7 @@ class AnadirCategoria : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        // Obtener la imagen y el nombre de la categoría si existen
         val imagenCategoria = intent.getIntExtra("imagenCategoria", R.drawable.addphotoalternate)
         val nombreCategoria = intent.getStringExtra("nombreCategoria")
 
@@ -44,6 +46,9 @@ class AnadirCategoria : AppCompatActivity() {
             // Devolver el resultado a GastosFragment
             val resultIntent = Intent()
             setResult(Activity.RESULT_OK, resultIntent)
+
+            val intent = Intent(this, Notas::class.java)
+            startActivity(intent)
             finish()
         }
 
@@ -52,6 +57,12 @@ class AnadirCategoria : AppCompatActivity() {
             val intent = Intent(this, CategoriaGastoActivity::class.java)
             startActivityForResult(intent, REQUEST_SELECT_CATEGORY)
         }
+
+        // Actualizar la imagen y el nombre al iniciar la actividad
+        val imageCategoriaView = findViewById<ImageView>(R.id.imageCategoria)
+        val nombreCategoriaView = findViewById<TextView>(R.id.textNombreCategoria)
+        imageCategoriaView.setImageResource(imagenCategoria)
+        nombreCategoriaView.text = nombreCategoria
     }
 
     companion object {
@@ -60,7 +71,7 @@ class AnadirCategoria : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_SELECT_CATEGORY) {
+        if (requestCode == REQUEST_SELECT_CATEGORY && resultCode == Activity.RESULT_OK) {
             val imagenCategoria = data?.getIntExtra("imagenCategoria", R.drawable.addphotoalternate)
             val nombreCategoria = data?.getStringExtra("nombreCategoria")
 

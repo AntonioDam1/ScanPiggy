@@ -9,12 +9,12 @@
             android:icon="@drawable/wallet"
             android:title="@string/Billetera" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="menu_gallery" />
+            android:id="@+id/consejos"
+            android:icon="@drawable/consejos"
+            android:title="@string/consejos_financieros" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="slideshow" />
+            android:id="@+id/exit"
+            android:icon="@drawable/exit"
+            android:title="@string/cerrar_aplicaci_n" />
     </group>
 </menu>

@@ -42,19 +42,20 @@
             android:layout_width="387dp"
             android:layout_height="55dp"
             android:layout_marginTop="8dp"
+            android:background="@color/colorPressed"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
             app:tabGravity="fill"
-            app:tabIndicatorColor="@color/colorAccent"
+            app:tabIndicatorColor="@color/colorCategoria3"
             app:tabMode="fixed"
             app:tabTextColor="@android:color/white"
             tools:ignore="MissingConstraints" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
-            android:layout_width="398dp"
-            android:layout_height="531dp"
+            android:layout_width="412dp"
+            android:layout_height="459dp"
             android:layout_below="@id/tab_layout"
             app:layout_constraintBottom_toTopOf="@+id/nav_view"
             app:layout_constraintEnd_toEndOf="parent"
@@ -80,7 +81,7 @@
 
 
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view_lateral_notas"
+        android:id="@+id/nav_view_lateral"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

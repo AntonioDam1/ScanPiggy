@@ -1,85 +1,96 @@
 package com.example.scanpiggy.adapter
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scanpiggy.R
+import com.example.scanpiggy.model.PresupuestoItem
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CustomAdapter: RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+class CustomAdapter(
+    private val presupuestos: List<PresupuestoItem>
+) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
-    val arrayPresupuesto = arrayOf(
-        "Presupuesto de hoy: ",
-        "Presupuesto de la semana: ",
-        "Presupuesto del mes: ",
-        "Presupuesto del año: "
-    )
+    private val auth = FirebaseAuth.getInstance()
+    private val firestore = FirebaseFirestore.getInstance()
 
-    val images = intArrayOf(
-        R.drawable.euro,
-        R.drawable.euro,
-        R.drawable.euro,
-        R.drawable.euro
-    )
-
-    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
-        val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.cards_layout, viewGroup, false)
-        return ViewHolder(v)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.cards_layout, parent, false)
+        return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        viewHolder.itemImage.setImageResource(images[i])
-        viewHolder.itemPresupuesto.text = arrayPresupuesto[i]
-        viewHolder.itemFecha.text = getDateRange(i)
-        viewHolder.itemNumeroPresupuesto.editableText
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val presupuestoItem = presupuestos[position]
+
+        holder.itemImage.setImageResource(presupuestoItem.imageResource)
+        holder.itemPresupuesto.text = presupuestoItem.tipoPresupuesto
+        holder.itemFecha.text = presupuestoItem.fecha
+        holder.itemNumeroPresupuesto.setText(presupuestoItem.valor.toString())
+
+        holder.itemNumeroPresupuesto.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                val nuevoPresupuesto = holder.itemNumeroPresupuesto.text.toString().toDoubleOrNull() ?: 0.0
+                updatePresupuesto(presupuestoItem, nuevoPresupuesto)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
-        return arrayPresupuesto.size
+        return presupuestos.size
     }
 
-    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var itemImage: ImageView = itemView.findViewById(R.id.image_divisa)
         var itemPresupuesto: TextView = itemView.findViewById(R.id.text_presupuesto)
         var itemFecha: TextView = itemView.findViewById(R.id.text_fecha)
         var itemNumeroPresupuesto: EditText = itemView.findViewById(R.id.text_numeroPresupuesto)
-    }
 
-    @SuppressLint("SimpleDateFormat")
-    private fun getDateRange(type: Int): String {
-        val calendar = Calendar.getInstance()
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy")
-
-        return when (type) {
-            0 -> {
-                // Día de hoy
-                val today = calendar.time
-                "Día: ${dateFormat.format(today)}"
+        init {
+            // Agregar listener para guardar el presupuesto cuando se presiona Enter
+            itemNumeroPresupuesto.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    val nuevoPresupuesto = itemNumeroPresupuesto.text.toString().toDoubleOrNull() ?: 0.0
+                    updatePresupuesto(presupuestos[adapterPosition], nuevoPresupuesto)
+                    true
+                } else {
+                    false
+                }
             }
-            1 -> {
-                // Semana: del día de hoy a 7 días después
-                val startOfWeek = calendar.time
-                calendar.add(Calendar.DAY_OF_YEAR, 7)
-                val endOfWeek = calendar.time
-                "Semana: ${dateFormat.format(startOfWeek)} - ${dateFormat.format(endOfWeek)}"
-            }
-            2 -> {
-                // Mes: el mes actual
-                val currentMonth = SimpleDateFormat("MMMM yyyy").format(calendar.time)
-                "Mes: $currentMonth"
-            }
-            3 -> {
-                // Año: el año actual
-                val currentYear = SimpleDateFormat("yyyy").format(calendar.time)
-                "Año: $currentYear"
-            }
-            else -> "Fecha desconocida"
         }
     }
+
+    private fun updatePresupuesto(presupuestoItem: PresupuestoItem, nuevoValor: Double) {
+        presupuestoItem.valor = nuevoValor
+
+        val user = auth.currentUser
+        user?.let { currentUser ->
+            val presupuestoRef = firestore.collection("usuarios").document(currentUser.uid)
+                .collection("presupuestos").document(presupuestoItem.id)
+
+            // Actualizar en Firestore
+            presupuestoRef.update("valor", nuevoValor)
+                .addOnSuccessListener {
+                    Log.d(TAG, "Presupuesto actualizado correctamente en Firestore")
+                    notifyDataSetChanged() // Actualizar RecyclerView si es necesario
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error al actualizar presupuesto en Firestore", e)
+                    // Manejar error o revertir cambios locales si es necesario
+                    presupuestoItem.valor = presupuestoItem.valor // Revertir cambios locales si es necesario
+                }
+        }
+    }
+
+
 }
